@@ -106,6 +106,9 @@ namespace Grabacr07.KanColleViewer.Plugins.Trackers
 
             foreach (int id in api_ship_id)
             {
+                if (id == -1)
+                    continue;
+
                 // 7 = CVL
                 // 11 = CV
                 if (kanColleClient.Master.Ships[id].ShipType.Id == 7
