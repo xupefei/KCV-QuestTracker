@@ -105,7 +105,7 @@ namespace Grabacr07.KanColleViewer.Plugins.Trackers
             {
                 // boss & win?
                 if (api.api_win_rank == "S" || api.api_win_rank == "A" || api.api_win_rank == "B")
-                    if (count <= 5)
+                    if (count < 5)
                         count++;
             }
 
