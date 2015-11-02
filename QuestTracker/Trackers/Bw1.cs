@@ -154,25 +154,26 @@ namespace Grabacr07.KanColleViewer.Plugins.Trackers
 
             if (is_first_combat)
             {
-                if (process_combat <= 36)
+                if (process_combat < 36)
                     process_combat++;
 
                 is_first_combat = false;
             }
 
             // win?
-            if (process_combat_s <= 6)
-                process_combat_s++;
+            if (api_win_rank == "S")
+                if (process_combat_s < 6)
+                    process_combat_s++;
 
             // is boss
             if (boss_names.Contains(api_deck_name))
             {
-                if (process_boss <= 24)
+                if (process_boss < 24)
                     process_boss++;
 
                 // boss & win?
                 if (api_win_rank == "S" || api_win_rank == "A" || api_win_rank == "B")
-                    if (process_boss_win <= 12)
+                    if (process_boss_win < 12)
                         process_boss_win++;
             }
 
