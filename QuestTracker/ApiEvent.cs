@@ -241,7 +241,7 @@ namespace Grabacr07.KanColleViewer.Plugins
 
         private void UpdateEnemyMaxHP(int[] api_nowhps)
         {
-            api_nowhps = api_nowhps.Slice(1, 7);
+            api_nowhps = api_nowhps.Slice(7, 13);
 
             for (var i = 0; i < api_nowhps.Length; i++)
             {

@@ -9,17 +9,15 @@ using System.Reflection;
 using System.Threading;
 using Grabacr07.KanColleWrapper;
 using Grabacr07.KanColleWrapper.Models;
-using Grabacr07.KanColleWrapper.Models.Raw;
-using Nekoxy;
 
 namespace Grabacr07.KanColleViewer.Plugins
 {
     internal class QuestManager
     {
-        private ObservableCollection<ITracker> availableTrackers = new ObservableCollection<ITracker>();
+        private readonly ApiEvent apiEvent;
 
         private readonly Dictionary<int, DateTime> questsStartTracking = new Dictionary<int, DateTime>();
-        private readonly ApiEvent apiEvent;
+        private readonly ObservableCollection<ITracker> availableTrackers = new ObservableCollection<ITracker>();
 
         public QuestManager(KanColleClient client)
         {
