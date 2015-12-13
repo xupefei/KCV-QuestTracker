@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Globalization;
 using System.Linq;
+using System.Reactive.Linq;
 using System.Reflection;
 using System.Threading;
 using Grabacr07.KanColleWrapper;
@@ -15,7 +16,7 @@ namespace Grabacr07.KanColleViewer.Plugins
 {
     internal class QuestManager
     {
-        private readonly ObservableCollection<ITracker> availableTrackers = new ObservableCollection<ITracker>();
+        private ObservableCollection<ITracker> availableTrackers = new ObservableCollection<ITracker>();
 
         private readonly Dictionary<int, DateTime> questsStartTracking = new Dictionary<int, DateTime>();
         private readonly ApiEvent apiEvent;

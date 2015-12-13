@@ -228,7 +228,7 @@ namespace Grabacr07.KanColleViewer.Plugins
 
         private void ResetEnemy(int[] api_ship_ke)
         {
-            api_ship_ke = api_ship_ke.Slice(1, 6);
+            api_ship_ke = api_ship_ke.Slice(1, 7);
 
             for (var i = 0; i < api_ship_ke.Length; i++)
             {
@@ -241,7 +241,7 @@ namespace Grabacr07.KanColleViewer.Plugins
 
         private void UpdateEnemyMaxHP(int[] api_nowhps)
         {
-            api_nowhps = api_nowhps.Slice(7, 12);
+            api_nowhps = api_nowhps.Slice(1, 7);
 
             for (var i = 0; i < api_nowhps.Length; i++)
             {
@@ -252,7 +252,7 @@ namespace Grabacr07.KanColleViewer.Plugins
 
         private void UpdateEnemyNowHP(int[] api_nowhps)
         {
-            api_nowhps = api_nowhps.Slice(7, 12);
+            api_nowhps = api_nowhps.Slice(7, 13);
 
             for (var i = 0; i < api_nowhps.Length; i++)
             {
