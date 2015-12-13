@@ -10,16 +10,6 @@
              d:DesignHeight="300"
              d:DesignWidth="600"
              d:DataContext="{d:DesignInstance viewModels:PortalViewModel}">
-    <UserControl.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="pack://application:,,,/MetroRadiance;component/Styles/Controls.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/MetroRadiance;component/Styles/Icons.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/MetroRadiance;component/Themes/Dark.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/KanColleViewer;component/Styles/Controls.xaml" />
-            </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>
-    </UserControl.Resources>
 
     <StackPanel Orientation="Vertical" Margin="3,0,3,3">
         <TextBlock Padding="8,4,4,0" Foreground="LightGray" FontSize="14" Text="※任務（クエスト）画面を開いた際に更新されます。" />

@@ -31,59 +31,59 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Desktop.Metro">
-      <HintPath>..\KanColleViewer.ver.4.1.5\Desktop.Metro.dll</HintPath>
+      <HintPath>..\KanColleViewer ver.4.1\Desktop.Metro.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="DesktopToast">
-      <HintPath>..\KanColleViewer.ver.4.1.5\DesktopToast.dll</HintPath>
+      <HintPath>..\KanColleViewer ver.4.1\DesktopToast.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="KanColleViewer">
-      <HintPath>..\KanColleViewer.ver.4.1.5\KanColleViewer.exe</HintPath>
+      <HintPath>..\KanColleViewer ver.4.1\KanColleViewer.exe</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="KanColleViewer.Composition">
-      <HintPath>..\KanColleViewer.ver.4.1.5\KanColleViewer.Composition.dll</HintPath>
+      <HintPath>..\KanColleViewer ver.4.1\KanColleViewer.Composition.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="KanColleViewer.Controls">
-      <HintPath>..\KanColleViewer.ver.4.1.5\KanColleViewer.Controls.dll</HintPath>
+      <HintPath>..\KanColleViewer ver.4.1\KanColleViewer.Controls.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="KanColleWrapper">
-      <HintPath>..\KanColleViewer.ver.4.1.5\KanColleWrapper.dll</HintPath>
+      <HintPath>..\KanColleViewer ver.4.1\KanColleWrapper.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Livet">
-      <HintPath>..\KanColleViewer.ver.4.1.5\Livet.dll</HintPath>
+      <HintPath>..\KanColleViewer ver.4.1\Livet.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Livet.Extensions">
-      <HintPath>..\KanColleViewer.ver.4.1.5\Livet.Extensions.dll</HintPath>
+      <HintPath>..\KanColleViewer ver.4.1\Livet.Extensions.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="log4net">
-      <HintPath>..\KanColleViewer.ver.4.1.5\log4net.dll</HintPath>
+      <HintPath>..\KanColleViewer ver.4.1\log4net.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="MetroRadiance">
-      <HintPath>..\KanColleViewer.ver.4.1.5\MetroRadiance.dll</HintPath>
+      <HintPath>..\KanColleViewer ver.4.1\MetroRadiance.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="MetroRadiance.Chrome">
-      <HintPath>..\KanColleViewer.ver.4.1.5\MetroRadiance.Chrome.dll</HintPath>
+      <HintPath>..\KanColleViewer ver.4.1\MetroRadiance.Chrome.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="MetroRadiance.Core">
-      <HintPath>..\KanColleViewer.ver.4.1.5\MetroRadiance.Core.dll</HintPath>
+      <HintPath>..\KanColleViewer ver.4.1\MetroRadiance.Core.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="MetroTrilithon">
-      <HintPath>..\KanColleViewer.ver.4.1.5\MetroTrilithon.dll</HintPath>
+      <HintPath>..\KanColleViewer ver.4.1\MetroTrilithon.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="MetroTrilithon.Desktop">
-      <HintPath>..\KanColleViewer.ver.4.1.5\MetroTrilithon.Desktop.dll</HintPath>
+      <HintPath>..\KanColleViewer ver.4.1\MetroTrilithon.Desktop.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Microsoft.Expression.Drawing, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -97,44 +97,40 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="Microsoft.WindowsAPICodePack">
-      <HintPath>..\KanColleViewer.ver.4.1.5\Microsoft.WindowsAPICodePack.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Microsoft.WindowsAPICodePack.Shell">
-      <HintPath>..\KanColleViewer.ver.4.1.5\Microsoft.WindowsAPICodePack.Shell.dll</HintPath>
+      <HintPath>..\KanColleViewer ver.4.1\Microsoft.WindowsAPICodePack.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Nekoxy">
-      <HintPath>..\KanColleViewer.ver.4.1.5\Nekoxy.dll</HintPath>
+      <HintPath>..\KanColleViewer ver.4.1\Nekoxy.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="StatefulModel">
-      <HintPath>..\KanColleViewer.ver.4.1.5\StatefulModel.dll</HintPath>
+      <HintPath>..\KanColleViewer ver.4.1\StatefulModel.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Core" />
     <Reference Include="System.Reactive.Core">
-      <HintPath>..\KanColleViewer.ver.4.1.5\System.Reactive.Core.dll</HintPath>
+      <HintPath>..\KanColleViewer ver.4.1\System.Reactive.Core.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="System.Reactive.Interfaces">
-      <HintPath>..\KanColleViewer.ver.4.1.5\System.Reactive.Interfaces.dll</HintPath>
+      <HintPath>..\KanColleViewer ver.4.1\System.Reactive.Interfaces.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="System.Reactive.Linq">
-      <HintPath>..\KanColleViewer.ver.4.1.5\System.Reactive.Linq.dll</HintPath>
+      <HintPath>..\KanColleViewer ver.4.1\System.Reactive.Linq.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="System.Reactive.PlatformServices">
-      <HintPath>..\KanColleViewer.ver.4.1.5\System.Reactive.PlatformServices.dll</HintPath>
+      <HintPath>..\KanColleViewer ver.4.1\System.Reactive.PlatformServices.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="System.Reactive.Windows.Threading">
-      <HintPath>..\KanColleViewer.ver.4.1.5\System.Reactive.Windows.Threading.dll</HintPath>
+      <HintPath>..\KanColleViewer ver.4.1\System.Reactive.Windows.Threading.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="System.Windows" />
@@ -151,11 +147,11 @@
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
     <Reference Include="TrotiNet">
-      <HintPath>..\KanColleViewer.ver.4.1.5\TrotiNet.dll</HintPath>
+      <HintPath>..\KanColleViewer ver.4.1\TrotiNet.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Vannatech.CoreAudio">
-      <HintPath>..\KanColleViewer.ver.4.1.5\Vannatech.CoreAudio.dll</HintPath>
+      <HintPath>..\KanColleViewer ver.4.1\Vannatech.CoreAudio.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="WindowsBase" />

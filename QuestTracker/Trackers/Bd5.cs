@@ -31,8 +31,6 @@ namespace Grabacr07.KanColleViewer.Plugins.Trackers
                                               if (!IsTracking)
                                                   return;
 
-                                              return;
-
                                               foreach (var ship in args.EnemyShips)
                                               {
                                                   // 15 = AP

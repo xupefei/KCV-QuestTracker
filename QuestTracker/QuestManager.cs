@@ -5,8 +5,11 @@ using System.Collections.Specialized;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
+using System.Threading;
 using Grabacr07.KanColleWrapper;
+using Grabacr07.KanColleWrapper.Models;
 using Grabacr07.KanColleWrapper.Models.Raw;
+using Nekoxy;
 
 namespace Grabacr07.KanColleViewer.Plugins
 {
@@ -26,7 +29,7 @@ namespace Grabacr07.KanColleViewer.Plugins
             // register all trackers
             RegisterAllTrackers();
 
-            client.Proxy.api_get_member_questlist.TryParse<kcsapi_questlist>().Subscribe(x => ProcessQuestList(x.Data));
+            client.Proxy.api_get_member_questlist.Subscribe(x => new Thread(ProcessQuests).Start());
         }
 
         public QuestProcessCollectionItem[] TrackingProcessStrings
@@ -143,13 +146,17 @@ namespace Grabacr07.KanColleViewer.Plugins
             QuestFS.SaveQuests(list.ToArray());
         }
 
-        private void ProcessQuestList(kcsapi_questlist api)
+        private void ProcessQuests()
         {
-            if (api.api_list == null || !api.api_list.Any())
+            Thread.Sleep(200);
+
+            var quests = KanColleClient.Current.Homeport.Quests;
+
+            if (quests.All == null || quests.All.Count == 0)
                 return;
 
-            var minId = api.api_list.Min(l => l.api_no);
-            var maxId = api.api_list.Max(l => l.api_no);
+            var minId = quests.All.Min(q => q.Id);
+            var maxId = quests.All.Max(q => q.Id);
 
             // if a tracker should in this page but not appeared, we should treat it as expired.
             if (availableTrackers.Any(t => t.Id > minId && t.Id < maxId))
@@ -159,7 +166,7 @@ namespace Grabacr07.KanColleViewer.Plugins
                     .ToList()
                     .ForEach(t =>
                              {
-                                 if (api.api_list.All(kq => kq.api_no != t.Id))
+                                 if (quests.All.All(q => q.Id != t.Id))
                                  {
                                      t.IsTracking = false;
                                      if (questsStartTracking.ContainsKey(t.Id))
@@ -168,31 +175,31 @@ namespace Grabacr07.KanColleViewer.Plugins
                              });
             }
 
-            foreach (var quest in api.api_list)
+            foreach (var quest in quests.All)
             {
-                var tracker = availableTrackers.Where(t => t.Id == quest.api_no);
+                var tracker = availableTrackers.Where(t => t.Id == quest.Id);
                 if (!tracker.Any())
                     continue;
 
-                switch (quest.api_state)
+                switch (quest.State)
                 {
-                    case 1:
+                    case QuestState.None:
                         tracker.First().IsTracking = false;
                         break;
 
-                    case 2:
+                    case QuestState.TakeOn:
                         tracker.First().IsTracking = true; // quest taking
                         // update tracking date, if nessessary
-                        if (!questsStartTracking.ContainsKey(quest.api_no))
-                            questsStartTracking.Add(quest.api_no, GetTokyoDateTime());
+                        if (!questsStartTracking.ContainsKey(quest.Id))
+                            questsStartTracking.Add(quest.Id, GetTokyoDateTime());
                         break;
 
-                    case 3:
+                    case QuestState.Accomplished:
                         tracker.First().IsTracking = false;
 
                         // delete tracking date
-                        if (questsStartTracking.ContainsKey(quest.api_no))
-                            questsStartTracking.Remove(quest.api_no);
+                        if (questsStartTracking.ContainsKey(quest.Id))
+                            questsStartTracking.Remove(quest.Id);
                         break;
                 }
             }
