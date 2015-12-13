@@ -1,28 +1,17 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Amemiya.Extensions;
-using Grabacr07.KanColleWrapper;
-using Grabacr07.KanColleWrapper.Models.Raw;
 
 namespace Grabacr07.KanColleViewer.Plugins.Trackers
 {
     /// <summary>
-    /// 敵艦隊を10回邀撃せよ！
+    ///     敵艦隊を10回邀撃せよ！
     /// </summary>
     internal class Bd3 : ITracker
     {
+        private readonly int max_count = 10;
         private int count;
 
-        protected virtual void OnProcessChanged(EventArgs e)
-        {
-            ProcessChanged?.Invoke(this, e);
-        }
-
         #region ITracker
-        
+
         public event EventHandler ProcessChanged;
 
         int ITracker.Id => 210;
@@ -35,29 +24,34 @@ namespace Grabacr07.KanColleViewer.Plugins.Trackers
 
         public bool IsTracking { get; set; }
 
-        public void RegisterTracker(KanColleClient client)
+        public void RegisterEvent(ApiEvent apiEvent)
         {
-            client.Proxy.api_req_sortie_battleresult.TryParse<kcsapi_battleresult>()
-                  .Subscribe(x => BattleResult(x.Data));
-            client.Proxy.api_req_combined_battle_battleresult.TryParse<kcsapi_combined_battle_battleresult>()
-                  .Subscribe(x => CombinedBattleResult(x.Data));
+            apiEvent.BattleResultEvent += (sender, args) =>
+                                          {
+                                              if (!IsTracking)
+                                                  return;
+
+                                              count += count >= max_count ? 0 : 1;
+
+                                              ProcessChanged?.Invoke(this, new EventArgs());
+                                          };
         }
 
         public void ResetQuest()
         {
             count = 0;
 
-            OnProcessChanged(new EventArgs());
+            ProcessChanged?.Invoke(this, new EventArgs());
         }
 
         public double GetPercentProcess()
         {
-            return (double)count / 10 * 100;
+            return (double)count / max_count * 100;
         }
 
         public string GetDisplayProcess()
         {
-            return count >= 10 ? "完成" : $"{count} / 10";
+            return count >= max_count ? "完成" : $"{count} / {max_count}";
         }
 
         public string SerializeData()
@@ -69,36 +63,14 @@ namespace Grabacr07.KanColleViewer.Plugins.Trackers
         {
             try
             {
-                count = Int32.Parse(data);
+                count = int.Parse(data);
             }
             catch
             {
-                count=0;
+                count = 0;
             }
         }
 
         #endregion
-
-        private void BattleResult(kcsapi_battleresult api)
-        {
-            if (!IsTracking)
-                return;
-
-            if (count < 10)
-                count++;
-
-            OnProcessChanged(new EventArgs());
-        }
-
-        private void CombinedBattleResult(kcsapi_combined_battle_battleresult api)
-        {
-            if (!IsTracking)
-                return;
-
-            if (count < 10)
-                count++;
-
-            OnProcessChanged(new EventArgs());
-        }
     }
 }

@@ -4,38 +4,38 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Globalization;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using Grabacr07.KanColleViewer.Plugins.Trackers;
+using System.Reflection;
 using Grabacr07.KanColleWrapper;
 using Grabacr07.KanColleWrapper.Models.Raw;
-using MetroTrilithon.Linq;
 
 namespace Grabacr07.KanColleViewer.Plugins
 {
-    class QuestManager
+    internal class QuestManager
     {
-        private readonly KanColleClient kanColleClient;
-
         private readonly ObservableCollection<ITracker> availableTrackers = new ObservableCollection<ITracker>();
 
         private readonly Dictionary<int, DateTime> questsStartTracking = new Dictionary<int, DateTime>();
+        private readonly ApiEvent apiEvent;
 
-        public event EventHandler QuestsEventChanged;
-
-        protected virtual void OnEventProcessChanged(EventArgs e)
+        public QuestManager(KanColleClient client)
         {
-            QuestsEventChanged?.Invoke(this, e);
+            apiEvent = new ApiEvent(client);
+
+            availableTrackers.CollectionChanged += AvailableTrackers_CollectionChanged;
+
+            // register all trackers
+            RegisterAllTrackers();
+
+            client.Proxy.api_get_member_questlist.TryParse<kcsapi_questlist>().Subscribe(x => ProcessQuestList(x.Data));
         }
 
         public QuestProcessCollectionItem[] TrackingProcessStrings
         {
             get
             {
-                List<QuestProcessCollectionItem> result = new List<QuestProcessCollectionItem>();
+                var result = new List<QuestProcessCollectionItem>();
 
-                var trackers = availableTrackers.Where(t => t.IsTracking == true);
+                var trackers = availableTrackers.Where(t => t.IsTracking);
 
                 if (!trackers.Any())
                     return result.ToArray();
@@ -57,43 +57,21 @@ namespace Grabacr07.KanColleViewer.Plugins
             }
         }
 
-        public QuestManager(KanColleClient client)
+        public event EventHandler QuestsEventChanged;
+
+        protected virtual void OnEventProcessChanged(EventArgs e)
         {
-            kanColleClient = client;
-
-            availableTrackers.CollectionChanged += AvailableTrackers_CollectionChanged;
-
-            // register all trackers
-            RegisterAllTrackers();
-
-            client.Proxy.api_get_member_questlist.TryParse<kcsapi_questlist>().Subscribe(x => ProcessQuestList(x.Data));
+            QuestsEventChanged?.Invoke(this, e);
         }
 
         private void RegisterAllTrackers()
         {
-            // TODO: Add additional tracker here.
-
-            availableTrackers.Add(new Bd1());
-            availableTrackers.Add(new Bd2());
-            availableTrackers.Add(new Bd3());
-            availableTrackers.Add(new Bd4());
-            availableTrackers.Add(new Bd5());
-            availableTrackers.Add(new Bd6());
-            availableTrackers.Add(new Bd7());
-            availableTrackers.Add(new Bd8());
-
-            availableTrackers.Add(new Bw1());
-            availableTrackers.Add(new Bw2());
-            availableTrackers.Add(new Bw3());
-            availableTrackers.Add(new Bw4());
-            availableTrackers.Add(new Bw5());
-            availableTrackers.Add(new Bw6());
-            availableTrackers.Add(new Bw7());
-            availableTrackers.Add(new Bw8());
-            availableTrackers.Add(new Bw9());
-            availableTrackers.Add(new Bw10());
-
-            availableTrackers.Add(new Bm5());
+            Assembly.GetExecutingAssembly()
+                    .GetTypes()
+                    .ToList()
+                    .Where(t => t.Namespace == "Grabacr07.KanColleViewer.Plugins.Trackers")
+                    .ToList()
+                    .ForEach(i => availableTrackers.Add((ITracker)Activator.CreateInstance(i)));
 
             // read storage info for all trackers
             var storage = QuestFS.GetQuests();
@@ -126,7 +104,7 @@ namespace Grabacr07.KanColleViewer.Plugins
 
             foreach (ITracker tracker in e.NewItems)
             {
-                tracker.RegisterTracker(kanColleClient);
+                tracker.RegisterEvent(apiEvent);
                 tracker.ResetQuest();
                 tracker.ProcessChanged += Tracker_ProcessChanged;
             }
@@ -141,17 +119,17 @@ namespace Grabacr07.KanColleViewer.Plugins
 
         private void SaveTrackerProcessesToStorage()
         {
-            List<QuestItem> list = new List<QuestItem>();
+            var list = new List<QuestItem>();
 
             foreach (var tracker in availableTrackers)
             {
-                QuestItem item = new QuestItem
-                                 {
-                                     Id = tracker.Id,
-                                     Type = tracker.Type,
-                                     Name = tracker.Name,
-                                     IsTracking = tracker.IsTracking
-                                 };
+                var item = new QuestItem
+                           {
+                               Id = tracker.Id,
+                               Type = tracker.Type,
+                               Name = tracker.Name,
+                               IsTracking = tracker.IsTracking
+                           };
 
                 DateTime dT;
                 questsStartTracking.TryGetValue(tracker.Id, out dT);
@@ -170,8 +148,8 @@ namespace Grabacr07.KanColleViewer.Plugins
             if (api.api_list == null || !api.api_list.Any())
                 return;
 
-            int minId = api.api_list.Min(l => l.api_no);
-            int maxId = api.api_list.Max(l => l.api_no);
+            var minId = api.api_list.Min(l => l.api_no);
+            var maxId = api.api_list.Max(l => l.api_no);
 
             // if a tracker should in this page but not appeared, we should treat it as expired.
             if (availableTrackers.Any(t => t.Id > minId && t.Id < maxId))
@@ -247,13 +225,13 @@ namespace Grabacr07.KanColleViewer.Plugins
 
                 case QuestType.Weekly:
                     var cal = CultureInfo.CreateSpecificCulture("ar-AE").Calendar;
-                    int w_time = cal.GetWeekOfYear(time, CalendarWeekRule.FirstDay, DayOfWeek.Monday);
-                    int w_now = cal.GetWeekOfYear(no, CalendarWeekRule.FirstDay, DayOfWeek.Monday);
+                    var w_time = cal.GetWeekOfYear(time, CalendarWeekRule.FirstDay, DayOfWeek.Monday);
+                    var w_now = cal.GetWeekOfYear(no, CalendarWeekRule.FirstDay, DayOfWeek.Monday);
 
-                    return (w_time == w_now && time.Year == no.Year);
+                    return w_time == w_now && time.Year == no.Year;
 
                 case QuestType.Monthly:
-                    return (time.Month == no.Month && time.Year == no.Year);
+                    return time.Month == no.Month && time.Year == no.Year;
 
                 default:
                     return false;

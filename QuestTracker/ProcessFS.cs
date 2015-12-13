@@ -1,21 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Diagnostics.CodeAnalysis;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Xml;
 using System.Xml.Linq;
 
 namespace Grabacr07.KanColleViewer.Plugins
 {
     [SuppressMessage("ReSharper", "AssignNullToNotNullAttribute")]
-    class QuestFS
+    internal class QuestFS
     {
         public static string StoragePath =
             Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location),
@@ -32,7 +27,7 @@ namespace Grabacr07.KanColleViewer.Plugins
                 if (!File.Exists(StoragePath))
                     return new QuestItem[0];
 
-                List<QuestItem> items = new List<QuestItem>();
+                var items = new List<QuestItem>();
 
                 XElement.Load(StoragePath)
                         .Descendants("Quest")
@@ -56,9 +51,9 @@ namespace Grabacr07.KanColleViewer.Plugins
                 if (!Directory.Exists(Path.GetDirectoryName(StoragePath)))
                     Directory.CreateDirectory(Path.GetDirectoryName(StoragePath));
 
-                XElement root = new XElement("Quests");
+                var root = new XElement("Quests");
 
-                foreach (QuestItem item in items)
+                foreach (var item in items)
                 {
                     root.Add(new XElement("Quest",
                                           new XAttribute("Id", item.Id),

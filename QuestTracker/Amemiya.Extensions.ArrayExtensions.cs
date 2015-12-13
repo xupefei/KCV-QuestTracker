@@ -7,7 +7,7 @@ namespace Amemiya.Extensions
     public static class ArrayExtensions
     {
         /// <summary>
-        /// Combine two arrays into one
+        ///     Combine two arrays into one
         /// </summary>
         /// <returns>The new array</returns>
         public static T[] CombineWith<T>(this T[] source, T[] with)
@@ -24,7 +24,7 @@ namespace Amemiya.Extensions
         }
 
         /// <summary>
-        /// Compare the two arrays
+        ///     Compare the two arrays
         /// </summary>
         /// <returns>True if they are equal</returns>
         public static bool EqualWith<T>(this T[] source, T[] compareWith)
@@ -39,7 +39,7 @@ namespace Amemiya.Extensions
         }
 
         /// <summary>
-        /// Expand current array to a lager one
+        ///     Expand current array to a lager one
         /// </summary>
         /// <returns>The new array</returns>
         public static byte[] ExpandTo(this byte[] source, int newLength)
@@ -56,23 +56,23 @@ namespace Amemiya.Extensions
         }
 
         /// <summary>
-        /// Fill every item of current array with "with"
+        ///     Fill every item of current array with "with"
         /// </summary>
         public static void FillWith<T>(this T[] source, T with)
         {
-            for (int i = 0; i < source.Length; i++)
+            for (var i = 0; i < source.Length; i++)
                 source[i] = with;
         }
 
         /// <summary>
-        /// Locate an array index in current array
+        ///     Locate an array index in current array
         /// </summary>
         /// <returns>-1 if not-found</returns>
         public static int IndexOf<T>(this T[] source, T[] arrayToFind, int startAt, bool isBackward)
         {
             if (isBackward)
             {
-                for (int index = startAt - arrayToFind.Length; index >= 0; --index)
+                for (var index = startAt - arrayToFind.Length; index >= 0; --index)
                 {
                     if (EqualWith(Slice(source, index, arrayToFind.Length + index), arrayToFind))
                         return index;
@@ -80,7 +80,7 @@ namespace Amemiya.Extensions
                 return -1;
             }
 
-            for (int index = startAt; index <= (source.Length - arrayToFind.Length); ++index)
+            for (var index = startAt; index <= source.Length - arrayToFind.Length; ++index)
             {
                 if (EqualWith(Slice(source, index, arrayToFind.Length + index), arrayToFind))
                     return index;
@@ -89,7 +89,7 @@ namespace Amemiya.Extensions
         }
 
         /// <summary>
-        /// Set current array to bytesValue, starting from startFrom
+        ///     Set current array to bytesValue, starting from startFrom
         /// </summary>
         public static void SetItems<T>(this T[] source, T[] bytesValue, int startFrom)
         {
@@ -105,10 +105,10 @@ namespace Amemiya.Extensions
             {
                 end = source.Length + end;
             }
-            int len = end - start;
+            var len = end - start;
 
-            T[] res = new T[len];
-            for (int i = 0; i < len; i++)
+            var res = new T[len];
+            for (var i = 0; i < len; i++)
             {
                 res[i] = source[i + start];
             }
@@ -130,7 +130,7 @@ namespace Amemiya.Extensions
                                                    (action, item) => new
                                                                      {
                                                                          Action = action,
-                                                                         Item = item,
+                                                                         Item = item
                                                                      }))
             {
                 assignment.Action.Invoke(assignment.Item);

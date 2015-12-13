@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.Linq;
 using Grabacr07.KanColleWrapper;
 using Livet;
@@ -8,10 +7,10 @@ namespace Grabacr07.KanColleViewer.Plugins.ViewModels
 {
     public class PortalViewModel : ViewModel
     {
+        private readonly QuestManager questManager;
+
         private ObservableCollection<QuestProcessCollectionItem> questProcessCollection =
             new ObservableCollection<QuestProcessCollectionItem>();
-
-        private readonly QuestManager questManager;
 
         public PortalViewModel(KanColleClient client)
         {
@@ -20,7 +19,7 @@ namespace Grabacr07.KanColleViewer.Plugins.ViewModels
             questManager
                 .QuestsEventChanged += (sender, e) =>
                                        {
-                                           ObservableCollection<QuestProcessCollectionItem> newQC =
+                                           var newQC =
                                                new ObservableCollection<QuestProcessCollectionItem>();
 
                                            questManager

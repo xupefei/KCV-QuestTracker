@@ -1,31 +1,17 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Amemiya.Extensions;
-using Grabacr07.KanColleWrapper;
-using Grabacr07.KanColleWrapper.Models;
-using Grabacr07.KanColleWrapper.Models.Raw;
 
 namespace Grabacr07.KanColleViewer.Plugins.Trackers
 {
     /// <summary>
-    /// ろ号作戦
+    ///     ろ号作戦
     /// </summary>
     internal class Bw4 : ITracker
     {
+        private readonly int max_count = 50;
         private int count;
 
-        private KanColleClient kanColleClient;
-
-        protected virtual void OnProcessChanged(EventArgs e)
-        {
-            ProcessChanged?.Invoke(this, e);
-        }
-
         #region ITracker
-        
+
         public event EventHandler ProcessChanged;
 
         int ITracker.Id => 221;
@@ -38,31 +24,40 @@ namespace Grabacr07.KanColleViewer.Plugins.Trackers
 
         public bool IsTracking { get; set; }
 
-        public void RegisterTracker(KanColleClient client)
+        public void RegisterEvent(ApiEvent apiEvent)
         {
-            kanColleClient = client;
+            apiEvent.BattleResultEvent += (sender, args) =>
+                                          {
+                                              if (!IsTracking)
+                                                  return;
 
-            client.Proxy.api_req_sortie_battleresult.TryParse<kcsapi_battleresult>()
-                  .Subscribe(x => BattleResult(x.Data));
-            client.Proxy.api_req_combined_battle_battleresult.TryParse<kcsapi_combined_battle_battleresult>()
-                  .Subscribe(x => CombinedBattleResult(x.Data));
+                                              foreach (var ship in args.EnemyShips)
+                                              {
+                                                  // 15 = AP
+                                                  if (ship.Type == 15)
+                                                      if (ship.MaxHp != int.MaxValue && ship.NowHp <= 0)
+                                                          count += count >= max_count ? 0 : 1;
+                                              }
+
+                                              ProcessChanged?.Invoke(this, new EventArgs());
+                                          };
         }
 
         public void ResetQuest()
         {
             count = 0;
 
-            OnProcessChanged(new EventArgs());
+            ProcessChanged?.Invoke(this, new EventArgs());
         }
 
         public double GetPercentProcess()
         {
-            return (double)count / 50 * 100;
+            return (double)count / max_count * 100;
         }
 
         public string GetDisplayProcess()
         {
-            return count >= 50 ? "完成" : $"{count} / 50";
+            return count >= max_count ? "完成" : $"{count} / {max_count}";
         }
 
         public string SerializeData()
@@ -75,7 +70,7 @@ namespace Grabacr07.KanColleViewer.Plugins.Trackers
         {
             try
             {
-                count = Int32.Parse(data);
+                count = int.Parse(data);
             }
             catch
             {
@@ -84,37 +79,5 @@ namespace Grabacr07.KanColleViewer.Plugins.Trackers
         }
 
         #endregion
-
-        private void BattleResult(kcsapi_battleresult api)
-        {
-            CheckShipCount(api.api_ship_id);
-
-            OnProcessChanged(new EventArgs());
-        }
-
-        private void CombinedBattleResult(kcsapi_combined_battle_battleresult api)
-        {
-            CheckShipCount(api.api_ship_id);
-
-            OnProcessChanged(new EventArgs());
-        }
-
-        private void CheckShipCount(int[] api_ship_id)
-        {
-            if (!IsTracking)
-                return;
-
-            foreach (int id in api_ship_id)
-            {
-                if (id == -1)
-                    continue;
-
-                // 15 = AP
-                if (kanColleClient.Master.Ships[id].ShipType.Id == 15)
-                    if (count < 50)
-                        count++;
-            }
-        }
-
     }
 }

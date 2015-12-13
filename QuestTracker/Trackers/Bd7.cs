@@ -1,26 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Amemiya.Extensions;
-using Grabacr07.KanColleWrapper;
-using Grabacr07.KanColleWrapper.Models.Raw;
 
 namespace Grabacr07.KanColleViewer.Plugins.Trackers
 {
     /// <summary>
-    /// 南西諸島海域の制海権を握れ！
+    ///     南西諸島海域の制海権を握れ！
     /// </summary>
     internal class Bd7 : ITracker
     {
-        private int count;
-        private bool isMap;
+        private readonly List<string> boss_names = new List<string>
+                                                   {
+                                                       "敵主力艦隊",
+                                                       "敵通商破壊艦隊",
+                                                       "敵主力打撃群",
+                                                       "敵侵攻中核艦隊",
+                                                       "敵主力艦隊"
+                                                   };
 
-        protected virtual void OnProcessChanged(EventArgs e)
-        {
-            ProcessChanged?.Invoke(this, e);
-        }
+        private readonly int map_id = 2;
+        private readonly int max_count = 5;
+
+        private int count;
 
         #region ITracker
 
@@ -36,32 +36,43 @@ namespace Grabacr07.KanColleViewer.Plugins.Trackers
 
         public bool IsTracking { get; set; }
 
-        public void RegisterTracker(KanColleClient client)
+        public void RegisterEvent(ApiEvent apiEvent)
         {
-            IsTracking = false;
+            apiEvent.BattleResultEvent += (sender, args) =>
+                                          {
+                                              if (!IsTracking)
+                                                  return;
 
-            // KCV does not handle "kcsapi/api_req_map/next" API, so we can't use "kcsapi/api_req_map/next/@api_bosscell_no"
-            // to determine whether a position is boss.
-            client.Proxy.api_req_map_start.TryParse<kcsapi_map_start>().Subscribe(x => MapStart(x.Data));
-            client.Proxy.api_req_sortie_battleresult.TryParse<kcsapi_battleresult>()
-                  .Subscribe(x => BattleResult(x.Data));
+                                              if (args.MapAreaId != map_id)
+                                                  return;
+
+                                              if (!boss_names.Contains(args.EnemyName))
+                                                  return;
+
+                                              if (args.Rank != "S" || args.Rank != "A" || args.Rank != "B")
+                                                  return;
+
+                                              count += count >= max_count ? 0 : 1;
+
+                                              ProcessChanged?.Invoke(this, new EventArgs());
+                                          };
         }
 
         public void ResetQuest()
         {
             count = 0;
 
-            OnProcessChanged(new EventArgs());
+            ProcessChanged?.Invoke(this, new EventArgs());
         }
 
         public double GetPercentProcess()
         {
-            return (double)count / 5 * 100;
+            return (double)count / max_count * 100;
         }
 
         public string GetDisplayProcess()
         {
-            return count >= 5 ? "完成" : $"{count} / 5";
+            return count >= max_count ? "完成" : $"{count} / {max_count}";
         }
 
         public string SerializeData()
@@ -73,7 +84,7 @@ namespace Grabacr07.KanColleViewer.Plugins.Trackers
         {
             try
             {
-                count = Int32.Parse(data);
+                count = int.Parse(data);
             }
             catch
             {
@@ -82,39 +93,5 @@ namespace Grabacr07.KanColleViewer.Plugins.Trackers
         }
 
         #endregion
-
-        private readonly List<string> boss_names = new List<string>
-                                                   {
-                                                       "敵主力艦隊",
-                                                       "敵通商破壊艦隊",
-                                                       "敵主力打撃群",
-                                                       "敵侵攻中核艦隊",
-                                                       "敵主力艦隊"
-                                                   };
-
-        private void BattleResult(kcsapi_battleresult api)
-        {
-            if (!IsTracking)
-                return;
-
-            if (!isMap)
-                return;
-
-            // is boss
-            if (boss_names.Contains(api.api_enemy_info.api_deck_name))
-            {
-                // boss & win?
-                if (api.api_win_rank == "S" || api.api_win_rank == "A" || api.api_win_rank == "B")
-                    if (count < 5)
-                        count++;
-            }
-
-            OnProcessChanged(new EventArgs());
-        }
-
-        private void MapStart(kcsapi_map_start api)
-        {
-            isMap = api.api_maparea_id == 2;
-        }
     }
 }

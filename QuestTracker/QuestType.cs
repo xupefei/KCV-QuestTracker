@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Grabacr07.KanColleViewer.Plugins
+﻿namespace Grabacr07.KanColleViewer.Plugins
 {
     public enum QuestType
     {
