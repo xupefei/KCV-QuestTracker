@@ -55,7 +55,7 @@ namespace Grabacr07.KanColleViewer.Plugins
             client.Proxy.api_get_member_ndock.TryParse<kcsapi_ndock>().Subscribe(x => Ndock());
 
             // 遠征
-            client.Proxy.api_req_mission_result.TryParse<mission_result>().Subscribe(x => MissionResult(x.Data));
+            client.Proxy.api_req_mission_result.TryParse<kcsapi_mission_result>().Subscribe(x => MissionResult(x.Data));
 
             // 地图开始
             client.Proxy.api_req_map_start.TryParse<kcsapi_map_start>().Subscribe(x => MapStart(x.Data));
@@ -144,7 +144,7 @@ namespace Grabacr07.KanColleViewer.Plugins
             NdockEvent?.Invoke(this, new EventArgs());
         }
 
-        private void MissionResult(mission_result data)
+        private void MissionResult(kcsapi_mission_result data)
         {
             MissionResultEvent?.Invoke(this,
                                        new MissionResultEventArgs

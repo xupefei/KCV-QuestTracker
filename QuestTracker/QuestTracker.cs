@@ -11,7 +11,7 @@ namespace Grabacr07.KanColleViewer.Plugins
     [ExportMetadata("Guid", "73584674-DC71-4CE2-AEF6-29F2DF8A41E6")]
     [ExportMetadata("Title", "QuestTracker")]
     [ExportMetadata("Description", "任務の進行度を追跡する。")]
-    [ExportMetadata("Version", "1.1")]
+    [ExportMetadata("Version", "1.1.1")]
     [ExportMetadata("Author", "+PaddyXu")]
     public class QuestTracker : IPlugin, ITool
     {

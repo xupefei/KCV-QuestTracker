@@ -177,7 +177,6 @@
     <Compile Include="Models\Raw\CommonTypes.cs" />
     <Compile Include="Models\Raw\kaisou_powerup.cs" />
     <Compile Include="Models\Raw\map_start_next.cs" />
-    <Compile Include="Models\Raw\mission_result.cs" />
     <Compile Include="Models\Raw\practice_battle.cs" />
     <Compile Include="Models\Raw\practice_midnight_battle.cs" />
     <Compile Include="Models\Raw\practice_result.cs" />
