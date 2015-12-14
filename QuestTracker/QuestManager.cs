@@ -17,7 +17,7 @@ namespace Grabacr07.KanColleViewer.Plugins
         private readonly ApiEvent apiEvent;
 
         private readonly Dictionary<int, DateTime> questsStartTracking = new Dictionary<int, DateTime>();
-        private readonly ObservableCollection<ITracker> availableTrackers = new ObservableCollection<ITracker>();
+        private ObservableCollection<ITracker> availableTrackers = new ObservableCollection<ITracker>();
 
         public QuestManager(KanColleClient client)
         {
@@ -74,6 +74,8 @@ namespace Grabacr07.KanColleViewer.Plugins
                     .Where(t => t.Namespace == "Grabacr07.KanColleViewer.Plugins.Trackers")
                     .ToList()
                     .ForEach(i => availableTrackers.Add((ITracker)Activator.CreateInstance(i)));
+
+            availableTrackers = new ObservableCollection<ITracker>(availableTrackers.OrderBy(i => i.Id));
 
             // read storage info for all trackers
             var storage = QuestFS.GetQuests();
