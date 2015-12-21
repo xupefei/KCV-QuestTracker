@@ -14,7 +14,7 @@ namespace Grabacr07.KanColleViewer.Plugins.Trackers
                                                        "敵通商破壊艦隊",
                                                        "敵主力打撃群",
                                                        "敵侵攻中核艦隊",
-                                                       "敵主力艦隊"
+                                                       //"敵主力艦隊"
                                                    };
 
         private readonly int map_id = 2;
@@ -49,7 +49,7 @@ namespace Grabacr07.KanColleViewer.Plugins.Trackers
                                               if (!boss_names.Contains(args.EnemyName))
                                                   return;
 
-                                              if (args.Rank != "S" || args.Rank != "A" || args.Rank != "B")
+                                              if (args.Rank != "S" && args.Rank != "A" && args.Rank != "B")
                                                   return;
 
                                               count += count >= max_count ? 0 : 1;

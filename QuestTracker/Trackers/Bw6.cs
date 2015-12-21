@@ -49,7 +49,7 @@ namespace Grabacr07.KanColleViewer.Plugins.Trackers
                                               if (!boss_names.Contains(args.EnemyName))
                                                   return;
 
-                                              if (args.Rank != "S" || args.Rank != "A" || args.Rank != "B")
+                                              if (args.Rank != "S" && args.Rank != "A" && args.Rank != "B")
                                                   return;
 
                                               count += count >= max_count ? 0 : 1;
