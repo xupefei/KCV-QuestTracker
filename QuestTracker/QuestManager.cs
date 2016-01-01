@@ -170,6 +170,7 @@ namespace Grabacr07.KanColleViewer.Plugins
                                  if (quests.All.All(q => q.Id != t.Id))
                                  {
                                      t.IsTracking = false;
+                                     t.ResetQuest();
                                      if (questsStartTracking.ContainsKey(t.Id))
                                          questsStartTracking.Remove(t.Id);
                                  }
@@ -190,13 +191,21 @@ namespace Grabacr07.KanColleViewer.Plugins
 
                     case QuestState.TakeOn:
                         tracker.First().IsTracking = true; // quest taking
-                        // update tracking date, if nessessary
+                        // if it is activating but expired (e.g. new day), we should delete it.
+                        if (questsStartTracking.ContainsKey(quest.Id)
+                            && !IsTrackingAvailable(tracker.First().Type, questsStartTracking[quest.Id]))
+                        {
+                            questsStartTracking.Remove(quest.Id);
+                            tracker.First().ResetQuest();
+                        }
+                        // and then add it again.
                         if (!questsStartTracking.ContainsKey(quest.Id))
                             questsStartTracking.Add(quest.Id, GetTokyoDateTime());
                         break;
 
                     case QuestState.Accomplished:
                         tracker.First().IsTracking = false;
+                        tracker.First().ResetQuest();
 
                         // delete tracking date
                         if (questsStartTracking.ContainsKey(quest.Id))
@@ -215,7 +224,7 @@ namespace Grabacr07.KanColleViewer.Plugins
             // The quests are refreshed everyday/week at 5AM(UTC+9).
             // if we subtract the time by 5h, we can then say the refresh time is 0AM(UTC+4).
             // It will be easier to check the availibility.
-            // One example is "Arabian Standard Time (ar-AE)": UTC+4, no daylight saving
+            // One example is "United Arab Emirates Standard Time (ar-AE)": UTC+4, no daylight saving
 
             if (time == DateTime.MinValue)
                 return false;
