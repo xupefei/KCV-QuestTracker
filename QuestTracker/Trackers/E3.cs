@@ -26,7 +26,7 @@ namespace Grabacr07.KanColleViewer.Plugins.Trackers
 
         public void RegisterEvent(ApiEvent apiEvent)
         {
-            apiEvent.NdockEvent += (sender, args) =>
+            apiEvent.NyukyoStartEvent += (sender, args) =>
                                    {
                                        if (!IsTracking)
                                            return;

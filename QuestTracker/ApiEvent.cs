@@ -52,7 +52,8 @@ namespace Grabacr07.KanColleViewer.Plugins
             client.Proxy.api_req_hokyu_charge.TryParse<kcsapi_charge>().Subscribe(x => Charge());
 
             // 入渠
-            client.Proxy.api_get_member_ndock.TryParse<kcsapi_ndock>().Subscribe(x => Ndock());
+            client.Proxy.ApiSessionSource.Where(x => x.Request.PathAndQuery == "/kcsapi/api_req_nyukyo/start")
+                  .Subscribe(x => NyukyoStart());
 
             // 遠征
             client.Proxy.api_req_mission_result.TryParse<kcsapi_mission_result>().Subscribe(x => MissionResult(x.Data));
@@ -83,7 +84,7 @@ namespace Grabacr07.KanColleViewer.Plugins
         public event EventHandler<BattleResultEventArgs> BattleResultEvent;
         public event EventHandler<MissionResultEventArgs> MissionResultEvent;
         public event EventHandler<PracticeBattleResultEventArgs> PracticeBattleResultEvent;
-        public event EventHandler NdockEvent;
+        public event EventHandler NyukyoStartEvent;
         public event EventHandler ChargeEvent;
         public event EventHandler CreateItemEvent;
         public event EventHandler CreateShipEvent;
@@ -139,9 +140,9 @@ namespace Grabacr07.KanColleViewer.Plugins
             ChargeEvent?.Invoke(this, new EventArgs());
         }
 
-        private void Ndock()
+        private void NyukyoStart()
         {
-            NdockEvent?.Invoke(this, new EventArgs());
+            NyukyoStartEvent?.Invoke(this, new EventArgs());
         }
 
         private void MissionResult(kcsapi_mission_result data)
